@@ -1,0 +1,6 @@
+name: rawdata
+dependencies:
+    - pytables=3.6.1
+    - numpy=1.19.1
+    - python=3.8.5
+    - pytest=6.0.2
