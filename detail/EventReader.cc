@@ -38,7 +38,9 @@ void petalo::EventReader::readSeqCounter(int16_t* &ptr){
 void petalo::EventReader::readFormatID(int16_t* &ptr){
 	//Format ID H
 	fFormatType =  *ptr & 0x000F;
-	fErrorBit  = (*ptr & 0x0020) >> 5;
+	fRunMode    = (*ptr & 0x000C) >> 2;
+	fEmpty      = (*ptr & 0x0010) >> 4;
+	fErrorBit   = (*ptr & 0x0020) >> 5;
 	ptr++;
 
 	//Format ID L
@@ -46,6 +48,8 @@ void petalo::EventReader::readFormatID(int16_t* &ptr){
 	ptr++;
 	if (verbose_ >= 2){
 		_log->debug("ErrorBit: {:x}", fErrorBit);
+		_log->debug("Empty: {:x}", fEmpty);
+		_log->debug("Run mode: {:x}", fRunMode);
 		_log->debug("Format Type {}", fFormatType);
 		_log->debug("Firmware version {}", fFWVersion);
 	}

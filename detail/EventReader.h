@@ -31,6 +31,8 @@ namespace petalo {
 
     unsigned int FWVersion() const;
     unsigned int FormatType() const;
+    unsigned int RunMode() const;
+    unsigned int EmptyBit() const;
     unsigned int SequenceCounter() const;
     unsigned int WordCounter() const;
     unsigned int EventID() const;
@@ -40,6 +42,8 @@ namespace petalo {
   private:
     unsigned int fFWVersion;
     unsigned int fFormatType;
+    unsigned int fEmpty;
+    unsigned int fRunMode;
     unsigned int fSequenceCounter;
     unsigned int fWordCounter;
 	unsigned int fCardID;
@@ -57,6 +61,8 @@ namespace petalo {
   // INLINE METHODS //////////////////////////////////////////////////
 
   inline unsigned int EventReader::FWVersion() const {return fFWVersion;}
+  inline unsigned int EventReader::EmptyBit() const {return fEmpty;}
+  inline unsigned int EventReader::RunMode() const {return fRunMode;}
   inline unsigned int EventReader::FormatType() const {return fFormatType;}
   inline unsigned int EventReader::SequenceCounter() const {return fSequenceCounter;}
   inline unsigned int EventReader::WordCounter() const {return fWordCounter;}

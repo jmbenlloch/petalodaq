@@ -394,13 +394,13 @@ void petalo::RawDataInput::ReadTofPet(int16_t * buffer, unsigned int size){
 	}
 
 	// TODO: Stop condition?
-	for (int i=0; i < 10; i++){
-	// int i=0;
-	// while (true){
-	//     if ((*buffer == 0xFFFF) && (*(buffer+1) == 0xFFFF)){
-	//         break;
-	//     }
-		printf("decode tofpet %d\n", i);
+	// for (int i=0; i < 10; i++){
+	int i=0;
+	while (true){
+		if ((*buffer == 0xFFFFFFFF) && (*(buffer+1) == 0xFFFFFFFF)){
+			break;
+		}
+		printf("decode tofpet %d. 0x%x 0x%x, bool: %d, %d\n", i, *buffer, *(buffer+1), (*buffer == 0xffffFFFF), (*(buffer+1) == 0xffffFFFF));
 		buffer += decodeTofPet(buffer, *dataVector_, evt_number);
 		i++;
 	}
