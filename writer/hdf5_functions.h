@@ -24,11 +24,23 @@ typedef struct{
 } petalo_t;
 
 
+typedef struct{
+	unsigned int  evt_number;
+	unsigned char tofpet_id;
+	unsigned char wordtype_id;
+	unsigned int  reserved;
+	unsigned char channel_id;
+	unsigned int  count;
+} evt_counter_t;
+
+
 hid_t createGroup(hid_t file, std::string& group);
 hid_t createTable(hid_t group, std::string& table_name, hsize_t memtype);
 
 hid_t createRunType();
 hid_t createTofPetType();
+hid_t createEvtCounterType();
 
 void writeRun(runinfo_t * runData, hid_t dataset, hid_t memtype, hsize_t evt_number);
 void writeTofPet(petalo_t * data, hid_t dataset, hid_t memtype, hsize_t evt_number);
+void writeEvtCount(evt_counter_t * data, hid_t dataset, hid_t memtype, hsize_t evt_number);

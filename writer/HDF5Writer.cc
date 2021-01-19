@@ -36,6 +36,10 @@ void petalo::HDF5Writer::Open(std::string fileName){
 	hsize_t memtype = createTofPetType();
 	std::string table_name = std::string("data");
 	_dataTable = createTable(_file, table_name, memtype);
+
+	memtype = createEvtCounterType();
+	table_name = std::string("counter");
+	_counterTable = createTable(_file, table_name, memtype);
 }
 
 hid_t petalo::HDF5Writer::CreateRunInfo(hsize_t file, size_t run_number){
@@ -64,6 +68,19 @@ void petalo::HDF5Writer::Write(std::vector<petalo_t>& tofpetData){
 	for(int i=0; i<tofpetData.size(); i++){
 		_log->debug("Writing event {} to HDF5 file", _row);
 		writeTofPet( &(tofpetData.at(i)), _dataTable, memtype, _row);
+		_row++;
+	}
+}
+
+void petalo::HDF5Writer::Write(std::vector<evt_counter_t>& tofpetData){
+	hsize_t memtype = createEvtCounterType();
+
+	printf("writer: evt counter size: %d\n", tofpetData.size());
+	printf("row: %d\n", _row);
+
+	for(int i=0; i<tofpetData.size(); i++){
+		_log->debug("Writing event {} to HDF5 file", _row);
+		writeEvtCount( &(tofpetData.at(i)), _counterTable, memtype, _row);
 		_row++;
 	}
 }

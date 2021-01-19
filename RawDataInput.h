@@ -61,7 +61,8 @@ public:
   bool errors();
 
   int decodeTofPet(int16_t * buffer, std::vector<petalo_t>& data, unsigned int evt_number);
-  void ReadTofPet(int16_t * buffer, unsigned int size);
+  int decodeEventCounter(int16_t * buffer, std::vector<evt_counter_t>& data, unsigned int evt_number);
+  void ReadTofPet(int16_t * buffer, unsigned int size, int RunMode);
 
 private:
   /// Retrieve DATE event header size stored in the raw data.
@@ -100,6 +101,7 @@ private:
   ReadConfig * config_;
 
   std::unique_ptr<std::vector<petalo_t> > dataVector_;
+  std::unique_ptr<std::vector<evt_counter_t> > countVector_;
 
 };
 

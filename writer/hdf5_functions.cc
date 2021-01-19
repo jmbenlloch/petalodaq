@@ -67,6 +67,18 @@ hid_t createTofPetType(){
 	return memtype;
 }
 
+hid_t createEvtCounterType(){
+	//Create compound datatype for the table
+	hsize_t memtype = H5Tcreate (H5T_COMPOUND, sizeof (evt_counter_t));
+	H5Tinsert (memtype, "evt_number"  , HOFFSET (evt_counter_t, evt_number ), H5T_NATIVE_UINT);
+	H5Tinsert (memtype, "tofpet_id"   , HOFFSET (evt_counter_t, tofpet_id  ), H5T_NATIVE_UINT8);
+	H5Tinsert (memtype, "wordtype_id" , HOFFSET (evt_counter_t, wordtype_id), H5T_NATIVE_UINT8);
+	H5Tinsert (memtype, "reserved"    , HOFFSET (evt_counter_t, reserved   ), H5T_NATIVE_UINT);
+	H5Tinsert (memtype, "channel_id"  , HOFFSET (evt_counter_t, channel_id ), H5T_NATIVE_UINT8);
+	H5Tinsert (memtype, "count"       , HOFFSET (evt_counter_t, count      ), H5T_NATIVE_UINT);
+	return memtype;
+}
+
 void writeTofPet(petalo_t * data, hid_t dataset, hid_t memtype, hsize_t evt_number){
 	hid_t memspace, file_space;
 	hsize_t dims[1] = {1};
@@ -83,6 +95,32 @@ void writeTofPet(petalo_t * data, hid_t dataset, hid_t memtype, hsize_t evt_numb
 	printf("data.tfine: %d\n", data->tfine);
 	printf("data.efine: %d\n", data->efine);
 
+
+	//Extend PMT dataset
+	dims[0] = evt_number+1;
+	H5Dset_extent(dataset, dims);
+
+	file_space = H5Dget_space(dataset);
+	hsize_t start[1] = {evt_number};
+	hsize_t count[1] = {1};
+	H5Sselect_hyperslab(file_space, H5S_SELECT_SET, start, NULL, count, NULL);
+	H5Dwrite(dataset, memtype, memspace, file_space, H5P_DEFAULT, data);
+	H5Sclose(file_space);
+	H5Sclose(memspace);
+}
+
+void writeEvtCount(evt_counter_t * data, hid_t dataset, hid_t memtype, hsize_t evt_number){
+	hid_t memspace, file_space;
+	hsize_t dims[1] = {1};
+	memspace = H5Screate_simple(1, dims, NULL);
+
+
+	printf("data.evt_number: %d\n" , data->evt_number);
+	printf("data.tofpet_id: %d\n"  , data->tofpet_id);
+	printf("data.wordtype_id: %d\n", data->wordtype_id);
+	printf("data.reserved: %d\n"   , data->reserved);
+	printf("data.channel_id: %d\n" , data->channel_id);
+	printf("data.count: %d\n"      , data->count);
 
 	//Extend PMT dataset
 	dims[0] = evt_number+1;

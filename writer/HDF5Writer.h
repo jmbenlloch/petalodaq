@@ -32,6 +32,7 @@ namespace petalo{
 
 	//Datasets
 	size_t _dataTable;
+	size_t _counterTable;
 
     //! counter for writen events
     size_t _ievt;
@@ -52,6 +53,7 @@ namespace petalo{
 
     //! write event
     void Write(std::vector<petalo_t>&);
+    void Write(std::vector<evt_counter_t>&);
 
     //! open file
     void Open(std::string filename);

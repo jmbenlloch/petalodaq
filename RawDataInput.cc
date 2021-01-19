@@ -186,8 +186,8 @@ bool petalo::RawDataInput::ReadDATEEvent()
 	eventError_ = false;
 
 	// Reset the output pointers.
-	// TODO petalo data: pmtDgts_.reset(new DigitCollection);
-	dataVector_.reset(new std::vector<petalo_t>);
+	dataVector_ .reset(new std::vector<petalo_t>);
+	countVector_.reset(new std::vector<evt_counter_t>);
 
 	if (!event_) return false;
 
@@ -299,7 +299,8 @@ bool petalo::RawDataInput::ReadDATEEvent()
 //			printf("payload[%d] = 0x%04x\n", i, payload_flip[i]);
 //		}
 		eventReader_->ReadCommonHeader(payload_flip);
-		fwVersion = eventReader_->FWVersion();
+		fwVersion   = eventReader_->FWVersion();
+		int RunMode = eventReader_->RunMode();
 		if(eventReader_->EventID() != myheader->NbInRun()){
 			_logerr->error("EventID ({}) & EventID ({}) mismatch, possible loss of data in DATE in card {}", myheader->NbInRun(), eventReader_->EventID(), eventReader_->CardID());
 		}else{
@@ -309,13 +310,24 @@ bool petalo::RawDataInput::ReadDATEEvent()
 		}
 
 		// Check firmware version here
-		// if (fwVersion == 0){
+		if (fwVersion == 0){
 			if( verbosity_ >= 1 ){
 				_log->debug("card: {}", eventReader_->CardID());
 			}
-			// ReadHotelSipm(payload_flip, size);
-			ReadTofPet(payload_flip, size);
-		// }
+			if (RunMode == 0){
+				_log->debug("Run mode QDC");
+			}
+			if (RunMode == 1){
+				_log->debug("Run mode TOT");
+			}
+			if (RunMode == 2){
+				_log->debug("Run mode Test mode for TPULSE");
+			}
+			if (RunMode == 3){
+				_log->debug("Run mode: counter");
+			}
+			ReadTofPet(payload_flip, size, RunMode);
+		}
 
 		count = end - position;
 		free(payload_flip_free);
@@ -371,12 +383,20 @@ void petalo::RawDataInput::writeEvent(){
 	unsigned int event_number = date_header->NbInRun();
 	run_ = date_header->RunNb();
 
-	_writer->Write(*dataVector_);
+	std::cout << "writer: " << dataVector_->size() << std::endl;
+	std::cout << "writer: " << countVector_->size() << std::endl;
+
+	if (dataVector_->size() > 0){
+		_writer->Write(*dataVector_);
+	}
+	if (countVector_->size() > 0){
+		_writer->Write(*countVector_);
+	}
 	_writer->SetRunNumber(run_);
 }
 
 
-void petalo::RawDataInput::ReadTofPet(int16_t * buffer, unsigned int size){
+void petalo::RawDataInput::ReadTofPet(int16_t * buffer, unsigned int size, int RunMode){
 	auto date_header = (*headOut_).rbegin();
 	unsigned int evt_number = date_header->NbInRun();
 
@@ -401,7 +421,12 @@ void petalo::RawDataInput::ReadTofPet(int16_t * buffer, unsigned int size){
 			break;
 		}
 		printf("decode tofpet %d. 0x%x 0x%x, bool: %d, %d\n", i, *buffer, *(buffer+1), (*buffer == 0xffffFFFF), (*(buffer+1) == 0xffffFFFF));
-		buffer += decodeTofPet(buffer, *dataVector_, evt_number);
+		if (RunMode < 3){
+			buffer += decodeTofPet(buffer, *dataVector_, evt_number);
+		}
+		if (RunMode == 3){
+			buffer += decodeEventCounter(buffer, *countVector_, evt_number);
+		}
 		i++;
 	}
 }
@@ -428,6 +453,38 @@ int petalo::RawDataInput::decodeTofPet(int16_t * buffer, std::vector<petalo_t>& 
 	mem_positions++;
 
 	data.efine       = (*buffer & 0x003FF);
+	buffer++;
+	mem_positions++;
+
+	dataVector.push_back(data);
+	return mem_positions;
+}
+
+
+int petalo::RawDataInput::decodeEventCounter(int16_t * buffer, std::vector<evt_counter_t>& dataVector, unsigned int evt_number){
+	int mem_positions = 0;
+	evt_counter_t data;
+	data.evt_number  = evt_number;
+
+	data.tofpet_id   = (*buffer & 0x0E000) >> 13;
+	data.wordtype_id = (*buffer & 0x000FF);
+	buffer++;
+	mem_positions++;
+
+    // 47 - 30 -> Reserved
+	data.reserved = (*buffer & 0x0FFFF) << 2;
+	std::cout << "reserved1: " << data.reserved << " ";
+	buffer++;
+	mem_positions++;
+
+	data.reserved   = (((*buffer & 0x0C000) >> 14) | data.reserved);
+	std::cout << data.reserved << std::endl;
+	data.channel_id =  (*buffer & 0x03F00) >> 8;
+	data.count      =  (*buffer & 0x000FF) << 16;
+	buffer++;
+	mem_positions++;
+
+	data.count = ((*buffer & 0x0FFFF) | data.count);
 	buffer++;
 	mem_positions++;
 
