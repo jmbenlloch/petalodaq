@@ -13,6 +13,7 @@ RUN apt-get update -y && \
 ENV JSONINC /usr/include/jsoncpp/json
 ENV MYSQLINC /usr/include/mysql
 ENV HDF5INC /usr/include/hdf5/serial
+ENV HDF5LIB /usr/lib/x86_64-linux-gnu
 ENV RD_DIR /rawdata
 ENV PATH /miniconda/bin:${PATH}
 

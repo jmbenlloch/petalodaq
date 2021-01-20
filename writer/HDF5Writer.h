@@ -62,7 +62,6 @@ namespace petalo{
     void Close();
 
     //! write dst info into root file
-	hid_t CreateRunInfo(hsize_t file, size_t run_number);
     void WriteRunInfo();
 
     void SetRunNumber(int run_number);
