@@ -155,11 +155,9 @@ bool petalo::RawDataInput::readNext()
 		eventNo_++;
 		if(!toSkip){
 			bool result =  ReadDATEEvent();
-			std::cout << "result: " << result << std::endl;
 			if (result){
 				// TODO: deal with event error
 	//			if(!eventError_ && discard_){
-					std::cout << "call writeEvent" << std::endl;
 					writeEvent();
 	//			}
 			}
@@ -378,13 +376,9 @@ unsigned int petalo::RawDataInput::readHeaderSize(std::FILE* fptr) const
 
 
 void petalo::RawDataInput::writeEvent(){
-	std::cout << "rawdata: writeEvent" << std::endl;
 	auto date_header = (*headOut_).rbegin();
 	unsigned int event_number = date_header->NbInRun();
 	run_ = date_header->RunNb();
-
-	std::cout << "writer: " << dataVector_->size() << std::endl;
-	std::cout << "writer: " << countVector_->size() << std::endl;
 
 	_writer->SetRunNumber(run_);
 

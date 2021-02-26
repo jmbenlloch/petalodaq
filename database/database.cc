@@ -55,7 +55,6 @@ void getSensorsFromDB(ReadConfig * config, petalo::Sensors &sensors, int run_num
 		channel_id = std::stoi(row[2]);
 		sensor_id  = std::stoi(row[3]);
 		sensors.update_relations(card_id, tofpet_id, channel_id, sensor_id);
-		printf("Sensor: %d, %d, %d -> %d\n", card_id, tofpet_id, channel_id, sensor_id);
 	}
 
 	mysql_free_result(result);
