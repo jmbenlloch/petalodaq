@@ -26,7 +26,7 @@ void getSensorsFromDB(ReadConfig * config, petalo::Sensors &sensors, int run_num
 	}
 
 	//Add run number
-	std::string sql = "SELECT CardID, TofpetID, ChannelID, SensorID from ChannelMapping WHERE MinRun <= RUN and MaxRun >= RUN ORDER BY SensorID";
+	std::string sql = "SELECT CardID, TofpetID, ChannelID, SensorID from ChannelMappingPB WHERE MinRun <= RUN and MaxRun >= RUN ORDER BY SensorID";
 
 	size_t start_pos = sql.find("RUN");
 	while(start_pos != std::string::npos){
