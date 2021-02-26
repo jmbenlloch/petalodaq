@@ -56,9 +56,11 @@ hid_t createTofPetType(){
 	//Create compound datatype for the table
 	hsize_t memtype = H5Tcreate (H5T_COMPOUND, sizeof (petalo_t));
 	H5Tinsert (memtype, "evt_number"  , HOFFSET (petalo_t, evt_number ), H5T_NATIVE_UINT);
+	H5Tinsert (memtype, "card_id"     , HOFFSET (petalo_t, card_id    ), H5T_NATIVE_UINT16);
 	H5Tinsert (memtype, "tofpet_id"   , HOFFSET (petalo_t, tofpet_id  ), H5T_NATIVE_UINT8);
 	H5Tinsert (memtype, "wordtype_id" , HOFFSET (petalo_t, wordtype_id), H5T_NATIVE_UINT8);
 	H5Tinsert (memtype, "channel_id"  , HOFFSET (petalo_t, channel_id ), H5T_NATIVE_UINT8);
+	H5Tinsert (memtype, "sensor_id"   , HOFFSET (petalo_t, sensor_id  ), H5T_NATIVE_INT16);
 	H5Tinsert (memtype, "tac_id"      , HOFFSET (petalo_t, tac_id     ), H5T_NATIVE_UINT8);
 	H5Tinsert (memtype, "tcoarse"     , HOFFSET (petalo_t, tcoarse    ), H5T_NATIVE_UINT16);
 	H5Tinsert (memtype, "ecoarse"     , HOFFSET (petalo_t, ecoarse    ), H5T_NATIVE_UINT16);
@@ -71,10 +73,12 @@ hid_t createEvtCounterType(){
 	//Create compound datatype for the table
 	hsize_t memtype = H5Tcreate (H5T_COMPOUND, sizeof (evt_counter_t));
 	H5Tinsert (memtype, "evt_number"  , HOFFSET (evt_counter_t, evt_number ), H5T_NATIVE_UINT);
+	H5Tinsert (memtype, "card_id"     , HOFFSET (evt_counter_t, card_id    ), H5T_NATIVE_UINT16);
 	H5Tinsert (memtype, "tofpet_id"   , HOFFSET (evt_counter_t, tofpet_id  ), H5T_NATIVE_UINT8);
 	H5Tinsert (memtype, "wordtype_id" , HOFFSET (evt_counter_t, wordtype_id), H5T_NATIVE_UINT8);
 	H5Tinsert (memtype, "reserved"    , HOFFSET (evt_counter_t, reserved   ), H5T_NATIVE_UINT);
 	H5Tinsert (memtype, "channel_id"  , HOFFSET (evt_counter_t, channel_id ), H5T_NATIVE_UINT8);
+	H5Tinsert (memtype, "sensor_id"   , HOFFSET (evt_counter_t, sensor_id  ), H5T_NATIVE_INT16);
 	H5Tinsert (memtype, "count"       , HOFFSET (evt_counter_t, count      ), H5T_NATIVE_UINT);
 	return memtype;
 }

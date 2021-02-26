@@ -25,6 +25,12 @@ class ReadConfig {
 		bool discard();
 		bool copyEvts();
 
+		std::string host();
+		std::string user();
+		std::string pass();
+		std::string dbname();
+		bool no_db();
+
 
 	private:
 		Json::Reader _reader;
@@ -37,6 +43,13 @@ class ReadConfig {
 		int _verbosity;
 		int _skip;
 		bool _copyEvts;
+
+		std::string _host;
+		std::string _user;
+		std::string _passwd;
+		std::string _dbname;
+		bool _nodb;
+
 		std::shared_ptr<spdlog::logger> _log;
 };
 
@@ -55,3 +68,13 @@ inline int ReadConfig::skip(){return _skip;}
 inline int ReadConfig::verbosity(){return _verbosity;}
 
 inline bool ReadConfig::copyEvts(){return _copyEvts;}
+
+inline std::string ReadConfig::host(){return _host;}
+
+inline std::string ReadConfig::user(){return _user;}
+
+inline std::string ReadConfig::pass(){return _passwd;}
+
+inline std::string ReadConfig::dbname(){return _dbname;}
+
+inline bool ReadConfig::no_db(){return _nodb;}

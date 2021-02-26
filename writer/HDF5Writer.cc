@@ -16,8 +16,10 @@ petalo::HDF5Writer::HDF5Writer(ReadConfig * config) :
 		_log->set_level(spd::level::debug);
 	}
 
+	_nodb = config->no_db();
 	_ievt = 0;
 	_row  = 0;
+	_firstEvent = true;
 }
 
 petalo::HDF5Writer::~HDF5Writer(){
@@ -49,15 +51,36 @@ void petalo::HDF5Writer::Close(){
   H5Fclose(_file);
 }
 
+void petalo::HDF5Writer::updateSensorID(petalo_t * data){
+	int sensor_id = _sensors.elecToSensor(data->card_id, data->tofpet_id, data->channel_id);
+	data->sensor_id = sensor_id;
+}
+
+void petalo::HDF5Writer::updateSensorID(evt_counter_t * data){
+	int sensor_id = _sensors.elecToSensor(data->card_id, data->tofpet_id, data->channel_id);
+	data->sensor_id = sensor_id;
+}
+
 void petalo::HDF5Writer::Write(std::vector<petalo_t>& tofpetData){
 	hsize_t memtype = createTofPetType();
+
+	if (_firstEvent && !_nodb){
+		getSensorsFromDB(_config, _sensors, _run_number);
+		_firstEvent = false;
+	}
 
 	printf("writer: tofpet size: %d\n", tofpetData.size());
 	printf("row: %d\n", _row);
 
 	for(int i=0; i<tofpetData.size(); i++){
 		_log->debug("Writing event {} to HDF5 file", _row);
-		writeTofPet( &(tofpetData.at(i)), _dataTable, memtype, _row);
+		petalo_t data = tofpetData.at(i);
+
+		if(!_nodb){
+			updateSensorID(&data);
+		}
+
+		writeTofPet(&data, _dataTable, memtype, _row);
 		_row++;
 	}
 }
@@ -65,12 +88,23 @@ void petalo::HDF5Writer::Write(std::vector<petalo_t>& tofpetData){
 void petalo::HDF5Writer::Write(std::vector<evt_counter_t>& tofpetData){
 	hsize_t memtype = createEvtCounterType();
 
+	if (_firstEvent && !_nodb){
+		getSensorsFromDB(_config, _sensors, _run_number);
+		_firstEvent = false;
+	}
+
 	printf("writer: evt counter size: %d\n", tofpetData.size());
 	printf("row: %d\n", _row);
 
 	for(int i=0; i<tofpetData.size(); i++){
 		_log->debug("Writing event {} to HDF5 file", _row);
-		writeEvtCount( &(tofpetData.at(i)), _counterTable, memtype, _row);
+		evt_counter_t data = tofpetData.at(i);
+
+		if(!_nodb){
+			updateSensorID(&data);
+		}
+
+		writeEvtCount(&data, _counterTable, memtype, _row);
 		_row++;
 	}
 }

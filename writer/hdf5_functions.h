@@ -13,9 +13,11 @@ typedef struct{
 
 typedef struct{
 	unsigned int evt_number;
+	unsigned short int card_id;
 	unsigned char tofpet_id;
 	unsigned char wordtype_id;
 	unsigned char channel_id;
+	short int sensor_id;
 	unsigned char tac_id;
 	unsigned short int tcoarse;
 	unsigned short int ecoarse;
@@ -26,10 +28,12 @@ typedef struct{
 
 typedef struct{
 	unsigned int  evt_number;
+	unsigned short int card_id;
 	unsigned char tofpet_id;
 	unsigned char wordtype_id;
 	unsigned int  reserved;
 	unsigned char channel_id;
+	short int sensor_id;
 	unsigned int  count;
 } evt_counter_t;
 

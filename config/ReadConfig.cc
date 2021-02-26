@@ -25,6 +25,11 @@ void ReadConfig::parse(){
 	_discard    = _obj.get("discard"   , true).asBool();
 	_copyEvts   = _obj.get("copy_evts" , false).asBool();
 	_skip       = _obj.get("skip"      , 0).asInt();
+	_host       = _obj.get("host", "neutrinos1.ific.uv.es").asString();
+	_user       = _obj.get("user", "petaloreader").asString();
+	_passwd     = _obj.get("pass", "petaloreader").asString();
+	_dbname     = _obj.get("dbname", "PETALODB").asString();
+	_nodb       = _obj.get("no_db", false).asBool();
 
 	_log->info("File in: {}", _filein);
 	_log->info("File out: {}", _fileout);
@@ -33,4 +38,7 @@ void ReadConfig::parse(){
 	_log->info("Discard error events: {}", _discard);
 	_log->info("Copy events from input: {}", _copyEvts);
 	_log->info("Skip events: {}", _skip);
+	_log->info("Host: {}", _host);
+	_log->info("Database name: {}", _dbname);
+	_log->info("Skipping database: {}", _nodb);
 }

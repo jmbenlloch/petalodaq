@@ -8,6 +8,9 @@
 
 #include "writer/hdf5_functions.h"
 
+#include "database/database.h"
+#include "database/sensors.h"
+
 #ifndef _READCONFIG
 #include "config/ReadConfig.h"
 #endif
@@ -29,6 +32,10 @@ namespace petalo{
 
 	//! First event
 	bool _firstEvent;
+
+	//! Database
+	bool _nodb;
+	petalo::Sensors _sensors;
 
 	//Datasets
 	size_t _dataTable;
@@ -65,6 +72,10 @@ namespace petalo{
     void WriteRunInfo();
 
     void SetRunNumber(int run_number);
+
+	void updateSensorID(petalo_t * data);
+	void updateSensorID(evt_counter_t * data);
+
   };
 
   inline void HDF5Writer::SetRunNumber(int run_number) {_run_number = run_number;}

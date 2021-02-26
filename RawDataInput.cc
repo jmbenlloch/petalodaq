@@ -386,13 +386,14 @@ void petalo::RawDataInput::writeEvent(){
 	std::cout << "writer: " << dataVector_->size() << std::endl;
 	std::cout << "writer: " << countVector_->size() << std::endl;
 
+	_writer->SetRunNumber(run_);
+
 	if (dataVector_->size() > 0){
 		_writer->Write(*dataVector_);
 	}
 	if (countVector_->size() > 0){
 		_writer->Write(*countVector_);
 	}
-	_writer->SetRunNumber(run_);
 }
 
 
@@ -422,19 +423,22 @@ void petalo::RawDataInput::ReadTofPet(int16_t * buffer, unsigned int size, int R
 		}
 		printf("decode tofpet %d. 0x%x 0x%x, bool: %d, %d\n", i, *buffer, *(buffer+1), (*buffer == 0xffffFFFF), (*(buffer+1) == 0xffffFFFF));
 		if (RunMode < 3){
-			buffer += decodeTofPet(buffer, *dataVector_, evt_number);
+			buffer += decodeTofPet(buffer, *dataVector_, evt_number, cardID);
 		}
 		if (RunMode == 3){
-			buffer += decodeEventCounter(buffer, *countVector_, evt_number);
+			buffer += decodeEventCounter(buffer, *countVector_, evt_number, cardID);
 		}
 		i++;
 	}
 }
 
-int petalo::RawDataInput::decodeTofPet(int16_t * buffer, std::vector<petalo_t>& dataVector, unsigned int evt_number){
+int petalo::RawDataInput::decodeTofPet(int16_t * buffer, std::vector<petalo_t>& dataVector,
+		unsigned int evt_number, int cardID){
 	int mem_positions = 0;
 	petalo_t data;
 	data.evt_number  = evt_number;
+	data.card_id     = cardID;
+	data.sensor_id   = -1; // To be filled by the writer after reading the DB
 
 	data.tofpet_id   = (*buffer & 0x0E000) >> 13;
 	data.wordtype_id = (*buffer & 0x000C0) >>  6;
@@ -461,10 +465,13 @@ int petalo::RawDataInput::decodeTofPet(int16_t * buffer, std::vector<petalo_t>& 
 }
 
 
-int petalo::RawDataInput::decodeEventCounter(int16_t * buffer, std::vector<evt_counter_t>& dataVector, unsigned int evt_number){
+int petalo::RawDataInput::decodeEventCounter(int16_t * buffer, std::vector<evt_counter_t>& dataVector,
+	   	unsigned int evt_number, int cardID){
 	int mem_positions = 0;
 	evt_counter_t data;
 	data.evt_number  = evt_number;
+	data.card_id     = cardID;
+	data.sensor_id   = -1; // To be filled by the writer after reading the DB
 
 	data.tofpet_id   = (*buffer & 0x0E000) >> 13;
 	data.wordtype_id = (*buffer & 0x000FF);

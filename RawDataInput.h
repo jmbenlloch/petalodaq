@@ -60,8 +60,8 @@ public:
 
   bool errors();
 
-  int decodeTofPet(int16_t * buffer, std::vector<petalo_t>& data, unsigned int evt_number);
-  int decodeEventCounter(int16_t * buffer, std::vector<evt_counter_t>& data, unsigned int evt_number);
+  int decodeTofPet(int16_t * buffer, std::vector<petalo_t>& data, unsigned int evt_number, int cardID);
+  int decodeEventCounter(int16_t * buffer, std::vector<evt_counter_t>& data, unsigned int evt_number, int cardID);
   void ReadTofPet(int16_t * buffer, unsigned int size, int RunMode);
 
 private:
