@@ -421,7 +421,7 @@ void petalo::RawDataInput::ReadTofPet(int16_t * buffer, unsigned int size, int R
 		if ((*buffer == 0xFFFFFFFF) && (*(buffer+1) == 0xFFFFFFFF)){
 			break;
 		}
-		printf("decode tofpet %d. 0x%x 0x%x, bool: %d, %d\n", i, *buffer, *(buffer+1), (*buffer == 0xffffFFFF), (*(buffer+1) == 0xffffFFFF));
+		//printf("decode tofpet %d. 0x%x 0x%x, bool: %d, %d\n", i, *buffer, *(buffer+1), (*buffer == 0xffffFFFF), (*(buffer+1) == 0xffffFFFF));
 		if (RunMode < 3){
 			buffer += decodeTofPet(buffer, *dataVector_, evt_number, cardID);
 		}
