@@ -64,6 +64,8 @@ public:
   int decodeEventCounter(int16_t * buffer, std::vector<evt_counter_t>& data, unsigned int evt_number, int cardID);
   void ReadTofPet(int16_t * buffer, unsigned int size, int RunMode);
 
+  std::vector<int> getLimits();
+
 private:
   /// Retrieve DATE event header size stored in the raw data.
   /// 80 bytes for the newer DAQ (DATE event header format 3.14)
@@ -96,16 +98,20 @@ private:
 
   int fwVersion;
   int fwVersionPmt;
+  int previousType_;
+  int positionInCountTable_;
 
   bool fileError_, eventError_;
   ReadConfig * config_;
 
   std::unique_ptr<std::vector<petalo_t> > dataVector_;
   std::unique_ptr<std::vector<evt_counter_t> > countVector_;
+  std::unique_ptr<std::vector<int> > limitsVector_;
 
 };
 
 inline bool RawDataInput::errors(){return fileError_;}
+inline std::vector<int> RawDataInput::getLimits(){return *limitsVector_;};
 
 }
 

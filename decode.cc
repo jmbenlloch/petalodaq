@@ -10,6 +10,8 @@
 #include "spdlog/spdlog.h"
 #endif
 
+#include <vector>
+
 namespace spd = spdlog;
 
 int main(int argc, char* argv[]){
@@ -38,6 +40,12 @@ int main(int argc, char* argv[]){
 
 	//CLose open files with rawdatainput
 	writer.WriteRunInfo();
+	std::vector<int> limits = rdata.getLimits();
+	printf("limits size: %d\n", limits.size());
+	for (int i : limits){
+		printf("limits: %d\n", i);
+	}
+	writer.WriteLimits(rdata.getLimits());
 	writer.Close();
 
 	if(!rdata.errors()){

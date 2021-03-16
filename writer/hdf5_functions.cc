@@ -6,6 +6,12 @@ hid_t createRunType(){
 	return memtype;
 }
 
+hid_t createLimitType(){
+	hsize_t memtype = H5Tcreate (H5T_COMPOUND, sizeof (limit_t));
+	H5Tinsert (memtype, "limit", HOFFSET( limit_t, limit), H5T_NATIVE_INT);
+	return memtype;
+}
+
 hid_t createTable(hid_t group, std::string& table_name, hsize_t memtype){
 	//Create 1D dataspace (evt number). First dimension is unlimited (initially 0)
 	const hsize_t ndims = 1;
@@ -115,6 +121,23 @@ void writeEvtCount(evt_counter_t * data, hid_t dataset, hid_t memtype, hsize_t e
 	hsize_t count[1] = {1};
 	H5Sselect_hyperslab(file_space, H5S_SELECT_SET, start, NULL, count, NULL);
 	H5Dwrite(dataset, memtype, memspace, file_space, H5P_DEFAULT, data);
+	H5Sclose(file_space);
+	H5Sclose(memspace);
+}
+
+void writeLimits(limit_t * limit, hid_t dataset, hid_t memtype, hsize_t row_number){
+	hid_t memspace, file_space;
+	hsize_t dims[1] = {1};
+	memspace = H5Screate_simple(1, dims, NULL);
+
+	dims[0] = row_number+1;
+	H5Dset_extent(dataset, dims);
+
+	file_space = H5Dget_space(dataset);
+	hsize_t start[1] = {row_number};
+	hsize_t count[1] = {1};
+	H5Sselect_hyperslab(file_space, H5S_SELECT_SET, start, NULL, count, NULL);
+	H5Dwrite(dataset, memtype, memspace, file_space, H5P_DEFAULT, limit);
 	H5Sclose(file_space);
 	H5Sclose(memspace);
 }

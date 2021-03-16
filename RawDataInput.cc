@@ -27,6 +27,7 @@ petalo::RawDataInput::RawDataInput(ReadConfig * config, HDF5Writer * writer) :
 	headOut_(),
 	eventReader_(),
 	discard_(config->discard()),
+	previousType_(-1),
 	fileError_(0)
 {
 	_log = spd::stdout_color_mt("rawdata");
@@ -38,6 +39,12 @@ petalo::RawDataInput::RawDataInput(ReadConfig * config, HDF5Writer * writer) :
 	_writer = writer;
 
 	config_ = config;
+
+	dataVector_  .reset(new std::vector<petalo_t>);
+	countVector_ .reset(new std::vector<evt_counter_t>);
+	limitsVector_.reset(new std::vector<int>);
+
+	positionInCountTable_ = 0;
 }
 
 
@@ -183,6 +190,9 @@ bool petalo::RawDataInput::ReadDATEEvent()
 	int count = 0;
 	eventError_ = false;
 
+	// Store the size of countVector
+	positionInCountTable_ += (*countVector_).size();
+	printf("positionInCountTable_: %d\n", positionInCountTable_);
 	// Reset the output pointers.
 	dataVector_ .reset(new std::vector<petalo_t>);
 	countVector_.reset(new std::vector<evt_counter_t>);
@@ -299,6 +309,16 @@ bool petalo::RawDataInput::ReadDATEEvent()
 		eventReader_->ReadCommonHeader(payload_flip);
 		fwVersion   = eventReader_->FWVersion();
 		int RunMode = eventReader_->RunMode();
+
+		// Add an entry in limits if a the run_mode change on the same run
+		// this is useful to distinguish different calibration configurations
+		// If there is no check for a particular RunMode, every entry will be duplicated
+		if ((RunMode != previousType_) && (RunMode == 3)){
+			printf("RunMode: %d\t previousType_: %d\n", RunMode, previousType_);
+			(*limitsVector_).push_back(positionInCountTable_);
+		}
+		previousType_ = RunMode;
+
 		if(eventReader_->EventID() != myheader->NbInRun()){
 			_logerr->error("EventID ({}) & EventID ({}) mismatch, possible loss of data in DATE in card {}", myheader->NbInRun(), eventReader_->EventID(), eventReader_->CardID());
 		}else{
@@ -324,6 +344,7 @@ bool petalo::RawDataInput::ReadDATEEvent()
 			if (RunMode == 3){
 				_log->debug("Run mode: counter");
 			}
+			printf("Read tofpet: mode %d\n", RunMode);
 			ReadTofPet(payload_flip, size, RunMode);
 		}
 
@@ -436,6 +457,7 @@ int petalo::RawDataInput::decodeTofPet(int16_t * buffer, std::vector<petalo_t>& 
 
 	data.tofpet_id   = (*buffer & 0x0E000) >> 13;
 	data.wordtype_id = (*buffer & 0x000C0) >>  6;
+	printf("wordtype_id: 0x%x\n", data.wordtype_id);
 	data.channel_id  = (*buffer & 0x0003F);
 	buffer++;
 	mem_positions++;
@@ -469,6 +491,7 @@ int petalo::RawDataInput::decodeEventCounter(int16_t * buffer, std::vector<evt_c
 
 	data.tofpet_id   = (*buffer & 0x0E000) >> 13;
 	data.wordtype_id = (*buffer & 0x000FF);
+	printf("wordtype_id: 0x%x\n", data.wordtype_id & 0x0C000);
 	buffer++;
 	mem_positions++;
 

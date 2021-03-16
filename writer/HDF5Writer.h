@@ -61,6 +61,7 @@ namespace petalo{
     //! write event
     void Write(std::vector<petalo_t>&);
     void Write(std::vector<evt_counter_t>&);
+    void WriteLimits(const std::vector<int>&);
 
     //! open file
     void Open(std::string filename);

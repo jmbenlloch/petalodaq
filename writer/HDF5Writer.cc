@@ -103,6 +103,20 @@ void petalo::HDF5Writer::Write(std::vector<evt_counter_t>& tofpetData){
 	}
 }
 
+void petalo::HDF5Writer::WriteLimits(const std::vector<int>& limits){
+	if (limits.size() > 0){
+		hsize_t memtype = createLimitType();
+		std::string run_name = std::string("limits");
+		hid_t limits_table = createTable(_file, run_name, memtype);
+		limit_t limit_container;
+		for (int i=0; i<limits.size(); i++){
+			limit_container.limit = limits[i];
+			writeLimits(&limit_container, limits_table, memtype, i);
+		}
+	}
+}
+
+
 void petalo::HDF5Writer::WriteRunInfo(){
 	//Create runInfo table and write run number
 	hsize_t memtype = createRunType();
