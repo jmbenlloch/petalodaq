@@ -18,7 +18,8 @@ petalo::HDF5Writer::HDF5Writer(ReadConfig * config) :
 
 	_nodb = config->no_db();
 	_ievt = 0;
-	_row  = 0;
+	_rowData     = 0;
+	_rowCounter  = 0;
 	_firstEvent = true;
 }
 
@@ -70,15 +71,15 @@ void petalo::HDF5Writer::Write(std::vector<petalo_t>& tofpetData){
 	}
 
 	for(int i=0; i<tofpetData.size(); i++){
-		_log->debug("Writing event {} to HDF5 file", _row);
+		_log->debug("Writing event {} to HDF5 file", _rowData);
 		petalo_t data = tofpetData.at(i);
 
 		if(!_nodb){
 			updateSensorID(&data);
 		}
 
-		writeTofPet(&data, _dataTable, memtype, _row);
-		_row++;
+		writeTofPet(&data, _dataTable, memtype, _rowData);
+		_rowData++;
 	}
 }
 
@@ -91,15 +92,15 @@ void petalo::HDF5Writer::Write(std::vector<evt_counter_t>& tofpetData){
 	}
 
 	for(int i=0; i<tofpetData.size(); i++){
-		_log->debug("Writing event {} to HDF5 file", _row);
+		_log->debug("Writing event {} to HDF5 file", _rowCounter);
 		evt_counter_t data = tofpetData.at(i);
 
 		if(!_nodb){
 			updateSensorID(&data);
 		}
 
-		writeEvtCount(&data, _counterTable, memtype, _row);
-		_row++;
+		writeEvtCount(&data, _counterTable, memtype, _rowCounter);
+		_rowCounter++;
 	}
 }
 

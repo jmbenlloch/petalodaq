@@ -43,7 +43,8 @@ namespace petalo{
 
     //! counter for writen events
     size_t _ievt;
-    size_t _row;
+    size_t _rowCounter;
+    size_t _rowData;
 	size_t _run_number;
 
 	ReadConfig * _config;
