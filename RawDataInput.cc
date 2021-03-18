@@ -215,6 +215,12 @@ bool petalo::RawDataInput::ReadDATEEvent()
 	myheader->SetBurstNb( EVENT_ID_GET_BURST_NB(event_->eventId));
 	myheader->SetNbInBurst( EVENT_ID_GET_NB_IN_BURST(event_->eventId));
 
+	uint64_t timestamp = event_->eventTimestampSec;
+	timestamp = (timestamp*1000000);
+	timestamp += event_->eventTimestampUsec;
+	// printf("timestamp: %d s, %d ud -> %llu\n", event_->eventTimestampSec, event_->eventTimestampUsec, timestamp);
+	myheader->SetTimestamp(timestamp);
+
 	// check whether there are sub events
 	if (event_->eventSize <= event_->eventHeadSize) return false;
 
@@ -399,6 +405,9 @@ unsigned int petalo::RawDataInput::readHeaderSize(std::FILE* fptr) const
 void petalo::RawDataInput::writeEvent(){
 	auto date_header = (*headOut_).rbegin();
 	unsigned int event_number = date_header->NbInRun();
+	uint64_t timestamp        = date_header->Timestamp();
+	_writer->WriteEventTime(event_number, timestamp);
+
 	run_ = date_header->RunNb();
 
 	_writer->SetRunNumber(run_);
@@ -457,7 +466,6 @@ int petalo::RawDataInput::decodeTofPet(int16_t * buffer, std::vector<petalo_t>& 
 
 	data.tofpet_id   = (*buffer & 0x0E000) >> 13;
 	data.wordtype_id = (*buffer & 0x000C0) >>  6;
-	printf("wordtype_id: 0x%x\n", data.wordtype_id);
 	data.channel_id  = (*buffer & 0x0003F);
 	buffer++;
 	mem_positions++;
@@ -491,18 +499,15 @@ int petalo::RawDataInput::decodeEventCounter(int16_t * buffer, std::vector<evt_c
 
 	data.tofpet_id   = (*buffer & 0x0E000) >> 13;
 	data.wordtype_id = (*buffer & 0x000FF);
-	printf("wordtype_id: 0x%x\n", data.wordtype_id & 0x0C000);
 	buffer++;
 	mem_positions++;
 
     // 47 - 30 -> Reserved
 	data.reserved = (*buffer & 0x0FFFF) << 2;
-	std::cout << "reserved1: " << data.reserved << " ";
 	buffer++;
 	mem_positions++;
 
 	data.reserved   = (((*buffer & 0x0C000) >> 14) | data.reserved);
-	std::cout << data.reserved << std::endl;
 	data.channel_id =  (*buffer & 0x03F00) >> 8;
 	data.count      =  (*buffer & 0x000FF) << 16;
 	buffer++;

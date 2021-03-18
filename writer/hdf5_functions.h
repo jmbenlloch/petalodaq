@@ -17,6 +17,11 @@ typedef struct{
 
 typedef struct{
 	unsigned int evt_number;
+	uint64_t timestamp;
+} evt_time_t;
+
+typedef struct{
+	unsigned int evt_number;
 	unsigned short int card_id;
 	unsigned char tofpet_id;
 	unsigned char wordtype_id;
@@ -49,8 +54,10 @@ hid_t createRunType();
 hid_t createTofPetType();
 hid_t createEvtCounterType();
 hid_t createLimitType();
+hid_t createEventTimeType();
 
 void writeRun(runinfo_t * runData, hid_t dataset, hid_t memtype, hsize_t evt_number);
 void writeLimits(limit_t * limit, hid_t dataset, hid_t memtype, hsize_t row_number);
 void writeTofPet(petalo_t * data, hid_t dataset, hid_t memtype, hsize_t evt_number);
 void writeEvtCount(evt_counter_t * data, hid_t dataset, hid_t memtype, hsize_t evt_number);
+void writeEventTime(evt_time_t * data, hid_t dataset, hid_t memtype, hsize_t evt_number);

@@ -5,6 +5,7 @@
 #include <vector>
 #include <iostream>
 #include <hdf5.h>
+#include <stdint.h>
 
 #include "writer/hdf5_functions.h"
 
@@ -40,6 +41,7 @@ namespace petalo{
 	//Datasets
 	size_t _dataTable;
 	size_t _counterTable;
+	size_t _timesTable;
 
     //! counter for writen events
     size_t _ievt;
@@ -63,6 +65,7 @@ namespace petalo{
     void Write(std::vector<petalo_t>&);
     void Write(std::vector<evt_counter_t>&);
     void WriteLimits(const std::vector<int>&);
+    void WriteEventTime(unsigned int evt_number, uint64_t timestamp);
 
     //! open file
     void Open(std::string filename);

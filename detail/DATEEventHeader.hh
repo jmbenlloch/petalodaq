@@ -1,6 +1,7 @@
 #ifndef navel_Products_DATEEventHeader_hh
 #define navel_Products_DATEEventHeader_hh
 #include <vector>
+#include <stdint.h>
 
 namespace petalo {
 
@@ -39,6 +40,9 @@ namespace petalo {
     unsigned int NbInBurst() const;
     void SetNbInBurst(unsigned int);
 
+    uint64_t Timestamp() const;
+    void SetTimestamp(uint64_t);
+
   private:
     unsigned int fEventSize;     ///< event size
     unsigned int fEventMagic;    ///< magic event signature
@@ -49,6 +53,7 @@ namespace petalo {
     unsigned int fNbInRun;       ///< event number within run
     unsigned int fBurstNb;       ///< burst number
     unsigned int fNbInBurst;     ///< event number within burst
+	uint64_t     fTimestamp;     ///< DATE event timestamp in us
 
   }; //class DATEEventHeader
 
@@ -100,6 +105,11 @@ namespace petalo {
   { return fNbInBurst; }
   inline void DATEEventHeader::SetNbInBurst(unsigned int nb)
   { fNbInBurst = nb; }
+
+  inline uint64_t DATEEventHeader::Timestamp() const
+  { return fTimestamp; }
+  inline void DATEEventHeader::SetTimestamp(uint64_t timestamp)
+  { fTimestamp = timestamp; }
 
 } // namespace petalo
 

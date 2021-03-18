@@ -9,7 +9,8 @@ petalo::DATEEventHeader::DATEEventHeader():
 	fRunNb(0),
 	fNbInRun(0),
 	fBurstNb(0),
-	fNbInBurst(0)
+	fNbInBurst(0),
+	fTimestamp(0)
 {
 }
 

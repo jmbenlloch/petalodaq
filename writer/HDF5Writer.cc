@@ -43,6 +43,10 @@ void petalo::HDF5Writer::Open(std::string fileName){
 	memtype = createEvtCounterType();
 	table_name = std::string("counter");
 	_counterTable = createTable(_file, table_name, memtype);
+
+	memtype = createEventTimeType();
+	table_name = std::string("dateEvents");
+	_timesTable = createTable(_file, table_name, memtype);
 }
 
 void petalo::HDF5Writer::Close(){
@@ -115,6 +119,15 @@ void petalo::HDF5Writer::WriteLimits(const std::vector<int>& limits){
 			writeLimits(&limit_container, limits_table, memtype, i);
 		}
 	}
+}
+
+void petalo::HDF5Writer::WriteEventTime(unsigned int evt_number, uint64_t timestamp){
+	hsize_t memtype = createEventTimeType();
+	evt_time_t evt_time;
+	evt_time.evt_number = evt_number;
+	evt_time.timestamp  = timestamp;
+	writeEventTime(&evt_time, _timesTable, memtype, _ievt);
+	_ievt += 1;
 }
 
 
