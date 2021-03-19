@@ -34,6 +34,9 @@ hid_t createTable(hid_t group, std::string& table_name, hsize_t memtype){
 	hsize_t chunk_dims[ndims] = {32768};
 	H5Pset_chunk(plist, ndims, chunk_dims);
 
+	//Set compression
+	H5Pset_deflate (plist, 4);
+
 	// Create dataset
 	hid_t dataset = H5Dcreate(group, table_name.c_str(), memtype, file_space,
 			H5P_DEFAULT, plist, H5P_DEFAULT);
