@@ -192,7 +192,6 @@ bool petalo::RawDataInput::ReadDATEEvent()
 
 	// Store the size of countVector
 	positionInCountTable_ += (*countVector_).size();
-	printf("positionInCountTable_: %d\n", positionInCountTable_);
 	// Reset the output pointers.
 	dataVector_ .reset(new std::vector<petalo_t>);
 	countVector_.reset(new std::vector<evt_counter_t>);
@@ -320,7 +319,7 @@ bool petalo::RawDataInput::ReadDATEEvent()
 		// this is useful to distinguish different calibration configurations
 		// If there is no check for a particular RunMode, every entry will be duplicated
 		if ((RunMode != previousType_) && (RunMode == 3)){
-			printf("RunMode: %d\t previousType_: %d\n", RunMode, previousType_);
+			// printf("RunMode: %d\t previousType_: %d\n", RunMode, previousType_);
 			(*limitsVector_).push_back(positionInCountTable_);
 		}
 		previousType_ = RunMode;
@@ -350,7 +349,6 @@ bool petalo::RawDataInput::ReadDATEEvent()
 			if (RunMode == 3){
 				_log->debug("Run mode: counter");
 			}
-			printf("Read tofpet: mode %d\n", RunMode);
 			ReadTofPet(payload_flip, size, RunMode);
 		}
 
