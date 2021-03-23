@@ -299,7 +299,6 @@ bool petalo::RawDataInput::ReadDATEEvent()
 
 		unsigned char *buffer = position;
 		unsigned int size = equipment->equipmentSize - sizeof(equipmentHeaderStruct);
-		printf("Size: %d\n", size);
 
 		//////////Getting firmware version
 
@@ -310,13 +309,9 @@ bool petalo::RawDataInput::ReadDATEEvent()
 		int data_size = flipWords(size, buffer_cp, payload_flip);
 		int tofpet_size = data_size - 8; // do not count the header size
 
-		for(int i=0; i<(size/2)+10; i++){
-			// printf("payload[%d] = 0x%04x\n", i, buffer[i]);
-			printf("payload[%d] = 0x%04x\n", i, buffer_cp[i]);
-		}
-		for(int i=0; i<(size/2)+10; i++){
-			printf("flipped[%d] = 0x%04x\n", i, payload_flip[i]);
-		}
+		// for(int i=0; i<(size/2)+10; i++){
+		//     printf("flipped[%d] = 0x%04x\n", i, payload_flip[i]);
+		// }
 
 		eventReader_->ReadCommonHeader(payload_flip);
 		fwVersion   = eventReader_->FWVersion();
@@ -392,8 +387,8 @@ int flipWords(unsigned int size, int16_t* in, int16_t* out){
 		pos_in  += 2;
 		pos_out += 2;
 	}
-	printf("pos_in : %d, size: %d\n", pos_in, size);
-	printf("pos_out: %d, size: %d\n", pos_out, size);
+	// printf("pos_in : %d, size: %d\n", pos_in, size);
+	// printf("pos_out: %d, size: %d\n", pos_out, size);
 	return pos_out -2; // return output counter minus FAFAFAFA
 }
 
@@ -445,7 +440,6 @@ void petalo::RawDataInput::ReadTofPet(int16_t * buffer, unsigned int size, int R
 		}
 	}
 
-	// TODO: Stop condition?
 	int nwords = 0;
 	int i=0;
 	while (true){
@@ -455,7 +449,6 @@ void petalo::RawDataInput::ReadTofPet(int16_t * buffer, unsigned int size, int R
 		if ((*buffer == 0xFFFFFFFF) && (*(buffer+1) == 0xFFFFFFFF)){
 		     break;
 		}
-		//printf("decode tofpet %d. 0x%x 0x%x, bool: %d, %d\n", i, *buffer, *(buffer+1), (*buffer == 0xffffFFFF), (*(buffer+1) == 0xffffFFFF));
 		if (RunMode < 3){
 			nwords = decodeTofPet(buffer, *dataVector_, evt_number, cardID);
 		}
@@ -464,7 +457,7 @@ void petalo::RawDataInput::ReadTofPet(int16_t * buffer, unsigned int size, int R
 		}
 		buffer += nwords;
 		i += nwords;
-		printf("i: %d\n", i);
+		// printf("i: %d\n", i);
 	}
 }
 
@@ -504,10 +497,10 @@ int petalo::RawDataInput::decodeTofPet(int16_t * buffer, std::vector<petalo_t>& 
 int petalo::RawDataInput::decodeEventCounter(int16_t * buffer, std::vector<evt_counter_t>& dataVector,
 	   	unsigned int evt_number, int cardID){
 
-	printf("0x%04x\n", buffer[0]);
-	printf("0x%04x\n", buffer[1]);
-	printf("0x%04x\n", buffer[2]);
-	printf("0x%04x\n", buffer[3]);
+	// printf("0x%04x\n", buffer[0]);
+	// printf("0x%04x\n", buffer[1]);
+	// printf("0x%04x\n", buffer[2]);
+	// printf("0x%04x\n", buffer[3]);
 
 	int mem_positions = 0;
 	evt_counter_t data;
@@ -535,12 +528,12 @@ int petalo::RawDataInput::decodeEventCounter(int16_t * buffer, std::vector<evt_c
 	buffer++;
 	mem_positions++;
 
-	printf("data.evt_number: %d\n" , data.evt_number);
-	printf("data.tofpet_id: %d\n"  , data.tofpet_id);
-	printf("data.wordtype_id: %d\n", data.wordtype_id);
-	printf("data.reserved: %d\n"   , data.reserved);
-	printf("data.channel_id: %d\n" , data.channel_id);
-	printf("data.count: %d\n"      , data.count);
+	// printf("data.evt_number: %d\n" , data.evt_number);
+	// printf("data.tofpet_id: %d\n"  , data.tofpet_id);
+	// printf("data.wordtype_id: %d\n", data.wordtype_id);
+	// printf("data.reserved: %d\n"   , data.reserved);
+	// printf("data.channel_id: %d\n" , data.channel_id);
+	// printf("data.count: %d\n"      , data.count);
 
 	dataVector.push_back(data);
 	return mem_positions;
