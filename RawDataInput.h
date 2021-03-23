@@ -115,5 +115,5 @@ inline std::vector<int> RawDataInput::getLimits(){return *limitsVector_;};
 
 }
 
-void flipWords(unsigned int size, int16_t* in, int16_t* out);
+int flipWords(unsigned int size, int16_t* in, int16_t* out);
 bool isEventSelected(eventHeaderStruct& event);
