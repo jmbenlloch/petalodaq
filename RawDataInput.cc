@@ -449,10 +449,12 @@ void petalo::RawDataInput::ReadTofPet(int16_t * buffer, unsigned int size, int R
 		if ((*buffer == 0xFFFFFFFF) && (*(buffer+1) == 0xFFFFFFFF)){
 		     break;
 		}
-		if (RunMode < 3){
+		int wordtype = (*buffer & 0x00A0) >> 6;
+		printf("wordtype_decode: %d\n", wordtype);
+		if (wordtype == 2){
 			nwords = decodeTofPet(buffer, *dataVector_, evt_number, cardID);
 		}
-		if (RunMode == 3){
+		else{
 			nwords = decodeEventCounter(buffer, *countVector_, evt_number, cardID);
 		}
 		buffer += nwords;
