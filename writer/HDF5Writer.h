@@ -65,7 +65,7 @@ namespace petalo{
     void Write(std::vector<petalo_t>&);
     void Write(std::vector<evt_counter_t>&);
     void WriteLimits(const std::vector<int>&);
-    void WriteEventTime(unsigned int evt_number, uint64_t timestamp);
+    void WriteEventTime(unsigned int evt_number, uint64_t timestamp, unsigned char run_control);
 
     //! open file
     void Open(std::string filename);

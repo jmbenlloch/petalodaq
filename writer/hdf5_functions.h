@@ -17,6 +17,7 @@ typedef struct{
 
 typedef struct{
 	unsigned int evt_number;
+	unsigned char run_control;
 	uint64_t timestamp;
 } evt_time_t;
 

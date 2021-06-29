@@ -43,6 +43,9 @@ namespace petalo {
     uint64_t Timestamp() const;
     void SetTimestamp(uint64_t);
 
+    unsigned char RunControl() const;
+    void SetRunControl(unsigned char);
+
   private:
     unsigned int fEventSize;     ///< event size
     unsigned int fEventMagic;    ///< magic event signature
@@ -53,6 +56,7 @@ namespace petalo {
     unsigned int fNbInRun;       ///< event number within run
     unsigned int fBurstNb;       ///< burst number
     unsigned int fNbInBurst;     ///< event number within burst
+    unsigned char fRunControl;   ///< run control bit in PETALO headers
 	uint64_t     fTimestamp;     ///< DATE event timestamp in us
 
   }; //class DATEEventHeader
@@ -110,6 +114,11 @@ namespace petalo {
   { return fTimestamp; }
   inline void DATEEventHeader::SetTimestamp(uint64_t timestamp)
   { fTimestamp = timestamp; }
+
+  inline unsigned char DATEEventHeader::RunControl() const
+  { return fRunControl; }
+  inline void DATEEventHeader::SetRunControl(unsigned char run_control)
+  { fRunControl = run_control; }
 
 } // namespace petalo
 

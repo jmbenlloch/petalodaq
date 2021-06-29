@@ -14,8 +14,9 @@ hid_t createLimitType(){
 
 hid_t createEventTimeType(){
 	hsize_t memtype = H5Tcreate (H5T_COMPOUND, sizeof (evt_time_t));
-	H5Tinsert (memtype, "evt_number", HOFFSET(evt_time_t, evt_number), H5T_NATIVE_UINT);
-	H5Tinsert (memtype, "timestamp" , HOFFSET(evt_time_t, timestamp) , H5T_NATIVE_UINT64);
+	H5Tinsert (memtype, "evt_number" , HOFFSET(evt_time_t, evt_number) , H5T_NATIVE_UINT);
+	H5Tinsert (memtype, "run_control", HOFFSET(evt_time_t, run_control), H5T_NATIVE_UINT8);
+	H5Tinsert (memtype, "timestamp"  , HOFFSET(evt_time_t, timestamp)  , H5T_NATIVE_UINT64);
 	return memtype;
 }
 

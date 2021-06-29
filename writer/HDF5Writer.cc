@@ -121,11 +121,12 @@ void petalo::HDF5Writer::WriteLimits(const std::vector<int>& limits){
 	}
 }
 
-void petalo::HDF5Writer::WriteEventTime(unsigned int evt_number, uint64_t timestamp){
+void petalo::HDF5Writer::WriteEventTime(unsigned int evt_number, uint64_t timestamp, unsigned char run_control){
 	hsize_t memtype = createEventTimeType();
 	evt_time_t evt_time;
-	evt_time.evt_number = evt_number;
-	evt_time.timestamp  = timestamp;
+	evt_time.evt_number  = evt_number;
+	evt_time.run_control = run_control;
+	evt_time.timestamp   = timestamp;
 	writeEventTime(&evt_time, _timesTable, memtype, _ievt);
 	_ievt += 1;
 }

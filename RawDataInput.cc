@@ -316,6 +316,8 @@ bool petalo::RawDataInput::ReadDATEEvent()
 		eventReader_->ReadCommonHeader(payload_flip);
 		fwVersion   = eventReader_->FWVersion();
 		int RunMode = eventReader_->RunMode();
+		unsigned char run_control = eventReader_->RunControl();
+		myheader->SetRunControl(run_control);
 
 		// Add an entry in limits if a the run_mode change on the same run
 		// this is useful to distinguish different calibration configurations
@@ -408,7 +410,8 @@ void petalo::RawDataInput::writeEvent(){
 	auto date_header = (*headOut_).rbegin();
 	unsigned int event_number = date_header->NbInRun();
 	uint64_t timestamp        = date_header->Timestamp();
-	_writer->WriteEventTime(event_number, timestamp);
+	unsigned char run_control = date_header->RunControl();
+	_writer->WriteEventTime(event_number, timestamp, run_control);
 
 	run_ = date_header->RunNb();
 
@@ -450,7 +453,7 @@ void petalo::RawDataInput::ReadTofPet(int16_t * buffer, unsigned int size, int R
 		     break;
 		}
 		int wordtype = (*buffer & 0x00A0) >> 6;
-		printf("wordtype_decode: %d\n", wordtype);
+		// printf("wordtype_decode: %d\n", wordtype);
 		if (wordtype == 2){
 			nwords = decodeTofPet(buffer, *dataVector_, evt_number, cardID);
 		}

@@ -41,12 +41,16 @@ void petalo::EventReader::readFormatID(int16_t* &ptr){
 	fRunMode    = (*ptr & 0x000C) >> 2;
 	fEmpty      = (*ptr & 0x0010) >> 4;
 	fErrorBit   = (*ptr & 0x0020) >> 5;
+	fRunControl = (*ptr & 0x0040) >> 6;
 	ptr++;
+
+	//printf("RunControl: %d\n", fRunControl);
 
 	//Format ID L
 	fFWVersion = *ptr & 0x0FFFF;
 	ptr++;
 	if (verbose_ >= 2){
+		_log->debug("RunControl: {:x}", fRunControl);
 		_log->debug("ErrorBit: {:x}", fErrorBit);
 		_log->debug("Empty: {:x}", fEmpty);
 		_log->debug("Run mode: {:x}", fRunMode);
