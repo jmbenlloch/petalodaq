@@ -1,0 +1,30 @@
+BootStrap: docker
+From: ubuntu:bionic
+
+%environment
+	export JSONINC=/usr/include/jsoncpp/json
+	export MYSQLINC=/usr/include/mysql
+	export HDF5INC=/usr/include/hdf5/serial
+	export HDF5LIB=/usr/lib/x86_64-linux-gnu
+	export RD_DIR=/rawdata
+	export PATH=/miniconda/bin:${PATH}
+
+%post
+	apt-get update -y && \
+	apt-get install -y git make g++ libhdf5-dev libhdf5-100 libjsoncpp1 libjsoncpp-dev  libmysqlclient-dev wget && \
+	ln -s /usr/lib/x86_64-linux-gnu/libhdf5_hl_cpp.so /usr/lib/x86_64-linux-gnu/libhdf5_hl.so && \
+	ln -s /usr/lib/x86_64-linux-gnu/libhdf5_serial.so /usr/lib/x86_64-linux-gnu/libhdf5.so  && \
+	apt-get autoremove -y && \
+	apt-get clean -y && \
+	rm -rf /var/cache/apt/archives/* && \
+	rm -rf /var/lib/apt/lists/*
+#cp /usr/include/hdf5/serial/* /usr/include/hdf5/
+
+	git clone https://github.com/jmbenlloch/petalodaq
+	cd petalodaq
+	export HDF5INC=/usr/include/hdf5/serial; export MYSQLINC=/usr/include/mysql; make
+
+%runscript
+    exec /petalodaq/decode "$@"
+
+
