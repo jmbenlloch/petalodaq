@@ -23,6 +23,8 @@ typedef struct{
 
 typedef struct{
 	unsigned int evt_number;
+	unsigned int ctdaq;
+	unsigned char ct_data;
 	unsigned short int card_id;
 	unsigned char tofpet_id;
 	unsigned char wordtype_id;

@@ -432,6 +432,7 @@ void petalo::RawDataInput::ReadTofPet(int16_t * buffer, unsigned int size, int R
 
 	int ErrorBit = eventReader_->GetErrorBit();
 	int cardID = eventReader_->CardID();
+	unsigned int ctdaq = eventReader_->GetCTDaq();
 
 	if (ErrorBit){
 		auto myheader = (*headOut_).rbegin();
@@ -455,7 +456,7 @@ void petalo::RawDataInput::ReadTofPet(int16_t * buffer, unsigned int size, int R
 		int wordtype = (*buffer & 0x00A0) >> 6;
 		// printf("wordtype_decode: %d\n", wordtype);
 		if (wordtype == 2){
-			nwords = decodeTofPet(buffer, *dataVector_, evt_number, cardID);
+			nwords = decodeTofPet(buffer, *dataVector_, evt_number, cardID, ctdaq);
 		}
 		else{
 			nwords = decodeEventCounter(buffer, *countVector_, evt_number, cardID);
@@ -467,14 +468,17 @@ void petalo::RawDataInput::ReadTofPet(int16_t * buffer, unsigned int size, int R
 }
 
 int petalo::RawDataInput::decodeTofPet(int16_t * buffer, std::vector<petalo_t>& dataVector,
-		unsigned int evt_number, int cardID){
+		unsigned int evt_number, int cardID, unsigned int ctdaq){
 	int mem_positions = 0;
 	petalo_t data;
 	data.evt_number  = evt_number;
+	data.ctdaq       = ctdaq;
 	data.card_id     = cardID;
 	data.sensor_id   = -1; // To be filled by the writer after reading the DB
 
 	data.tofpet_id   = (*buffer & 0x0E000) >> 13;
+	data.ct_data     = (*buffer & 0x01F00) >>  8;
+	// printf("buffer: 0x%04x \t ct_data: %d\n", *buffer, data.ct_data);
 	data.wordtype_id = (*buffer & 0x000C0) >>  6;
 	data.channel_id  = (*buffer & 0x0003F);
 	buffer++;

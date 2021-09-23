@@ -75,6 +75,18 @@ void petalo::EventReader::readCardID(int16_t* &ptr){
 	}
 }
 
+
+void petalo::EventReader::readCTDaq(int16_t* &ptr){
+	ctdaq = *ptr & 0x0FFFF;
+	ptr++;
+	ctdaq = (ctdaq << 16) | (*ptr & 0x0FFFF);
+	ptr++;
+	if (verbose_ >= 2){
+		_log->debug("CT daq: 0x{:08x}", ctdaq);
+	}
+}
+
+
 void petalo::EventReader::readEventID(int16_t* &ptr){
 	fEventID = ((*ptr & 0x0FFFF) << 16) + (*(ptr+1) & 0x0FFFF);
 	ptr+=2;
@@ -91,6 +103,7 @@ void petalo::EventReader::ReadCommonHeader(int16_t* &ptr){
 		readWordCount(ptr);
 		readEventID(ptr);
 		readCardID(ptr);
+		readCTDaq(ptr);
 	}
 }
 

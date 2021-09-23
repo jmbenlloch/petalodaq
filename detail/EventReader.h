@@ -28,6 +28,7 @@ namespace petalo {
 	void readWordCount(int16_t* &ptr);
 	void readEventID(int16_t* &ptr);
 	void readCardID(int16_t* &ptr);
+	void readCTDaq(int16_t* &ptr);
 
     unsigned int FWVersion() const;
     unsigned int FormatType() const;
@@ -39,6 +40,7 @@ namespace petalo {
     unsigned int EventID() const;
     unsigned int CardID() const;
     int GetErrorBit() const;
+	unsigned int GetCTDaq() const;
 
   private:
     unsigned int fFWVersion;
@@ -53,6 +55,7 @@ namespace petalo {
     int fErrorBit;
 	int fEventID;
 	int verbose_;
+	unsigned int ctdaq;
 
 	std::shared_ptr<spdlog::logger> _log;
 
@@ -72,6 +75,7 @@ namespace petalo {
   inline unsigned int EventReader::EventID() const {return fEventID;}
   inline unsigned char EventReader::RunControl() const {return fRunControl;}
   inline int EventReader::GetErrorBit() const {return fErrorBit;}
+  inline unsigned int EventReader::GetCTDaq() const {return ctdaq;}
 
 
 }

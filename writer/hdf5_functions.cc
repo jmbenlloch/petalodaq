@@ -74,6 +74,8 @@ hid_t createTofPetType(){
 	//Create compound datatype for the table
 	hsize_t memtype = H5Tcreate (H5T_COMPOUND, sizeof (petalo_t));
 	H5Tinsert (memtype, "evt_number"  , HOFFSET (petalo_t, evt_number ), H5T_NATIVE_UINT);
+	H5Tinsert (memtype, "ctdaq"       , HOFFSET (petalo_t, ctdaq      ), H5T_NATIVE_UINT);
+	H5Tinsert (memtype, "ct_data"     , HOFFSET (petalo_t, ct_data    ), H5T_NATIVE_UINT8);
 	H5Tinsert (memtype, "card_id"     , HOFFSET (petalo_t, card_id    ), H5T_NATIVE_UINT16);
 	H5Tinsert (memtype, "tofpet_id"   , HOFFSET (petalo_t, tofpet_id  ), H5T_NATIVE_UINT8);
 	H5Tinsert (memtype, "wordtype_id" , HOFFSET (petalo_t, wordtype_id), H5T_NATIVE_UINT8);
