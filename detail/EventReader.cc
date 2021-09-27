@@ -40,8 +40,8 @@ void petalo::EventReader::readFormatID(int16_t* &ptr){
 	fFormatType =  *ptr & 0x000F;
 	fRunMode    = (*ptr & 0x000C) >> 2;
 	fEmpty      = (*ptr & 0x0010) >> 4;
-	fErrorBit   = (*ptr & 0x0020) >> 5;
-	fRunControl = (*ptr & 0x0040) >> 6;
+	fErrorBit   = (*ptr & 0x0040) >> 6;
+	fRunControl = (*ptr & 0x0080) >> 7;
 	ptr++;
 
 	//printf("RunControl: %d\n", fRunControl);
