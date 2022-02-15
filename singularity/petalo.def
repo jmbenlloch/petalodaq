@@ -1,0 +1,17 @@
+BootStrap: library
+From: jmbenlloch/next/decoder_baseimage:latest
+
+%environment
+	export JSONINC=/usr/include/jsoncpp/json
+	export MYSQLINC=/usr/include/mysql
+	export HDF5INC=/usr/include
+	export HDF5LIB=/usr/lib
+
+%post
+	git clone https://github.com/jmbenlloch/petalodaq decoder
+	cd decoder
+	export HDF5INC=/usr/include; export MYSQLINC=/usr/include/mysql; make
+
+%runscript
+    exec /decoder/decode "$@"
+
