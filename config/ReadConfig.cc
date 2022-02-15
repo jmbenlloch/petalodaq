@@ -20,7 +20,7 @@ void ReadConfig::parse(){
     _reader.parse(ifs, _obj);
 	_filein     = _obj["file_in" ].asString();
 	_fileout    = _obj["file_out"].asString();
-	_maxevents  = _obj.get("max_events", 100000).asInt();
+	_maxevents  = _obj.get("max_events", 1000000000).asInt();
 	_verbosity  = _obj.get("verbosity" , 0).asInt();
 	_discard    = _obj.get("discard"   , true).asBool();
 	_copyEvts   = _obj.get("copy_evts" , false).asBool();
