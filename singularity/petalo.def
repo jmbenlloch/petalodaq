@@ -1,5 +1,5 @@
 BootStrap: library
-From: jmbenlloch/next/decoder_baseimage:latest
+From: jmbenlloch/petalo/decoder_baseimage:latest
 
 %environment
 	export JSONINC=/usr/include/jsoncpp/json
