@@ -85,6 +85,7 @@ void petalo::HDF5Writer::Write(std::vector<petalo_t>& tofpetData){
 		writeTofPet(&data, _dataTable, memtype, _rowData);
 		_rowData++;
 	}
+	H5Tclose(memtype);
 }
 
 void petalo::HDF5Writer::Write(std::vector<evt_counter_t>& tofpetData){
@@ -106,6 +107,7 @@ void petalo::HDF5Writer::Write(std::vector<evt_counter_t>& tofpetData){
 		writeEvtCount(&data, _counterTable, memtype, _rowCounter);
 		_rowCounter++;
 	}
+	H5Tclose(memtype);
 }
 
 void petalo::HDF5Writer::WriteLimits(const std::vector<int>& limits){
@@ -118,6 +120,7 @@ void petalo::HDF5Writer::WriteLimits(const std::vector<int>& limits){
 			limit_container.limit = limits[i];
 			writeLimits(&limit_container, limits_table, memtype, i);
 		}
+		H5Tclose(memtype);
 	}
 }
 
@@ -128,6 +131,7 @@ void petalo::HDF5Writer::WriteEventTime(unsigned int evt_number, uint64_t timest
 	evt_time.run_control = run_control;
 	evt_time.timestamp   = timestamp;
 	writeEventTime(&evt_time, _timesTable, memtype, _ievt);
+	H5Tclose(memtype);
 	_ievt += 1;
 }
 
@@ -140,4 +144,5 @@ void petalo::HDF5Writer::WriteRunInfo(){
 	runinfo_t runinfo;
 	runinfo.run_number = (int) _run_number;
 	writeRun(&runinfo, runinfo_table, memtype, 0);
+	H5Tclose(memtype);
 }
